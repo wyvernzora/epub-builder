@@ -1,0 +1,37 @@
+{
+  "name": "scrappy",
+  "version": "0.0.1",
+  "description": "Pull online stuff into EPUB",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/index.tsx"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/wyvernzora/scrappy.git"
+  },
+  "author": "Denis Luchkin-Zhou <wyvernzora@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wyvernzora/scrappy/issues"
+  },
+  "homepage": "https://github.com/wyvernzora/scrappy#readme",
+  "dependencies": {
+    "@types/node": "^14.14.16",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "debug": "^4.3.1",
+    "jszip": "^3.5.0",
+    "locale-enum": "^1.1.1",
+    "lodash": "^4.17.20",
+    "moment": "^2.29.1",
+    "preact": "^10.5.7",
+    "preact-render-to-string": "^5.1.12",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
+  }
+}
