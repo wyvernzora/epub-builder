@@ -1,15 +1,15 @@
-import React from 'react'
 import { Node } from "../structure";
 import { RenderingContext } from "../codegen";
+import { Component, createElement } from "preact";
 
 export type PageProps<NodeType extends Node> = RenderingContext<NodeType> & {
     innerHtml?: string
 }
 
-export class Page<NodeType extends Node> extends React.PureComponent<PageProps<NodeType>> {
+export class Page<NodeType extends Node> extends Component<PageProps<NodeType>> {
     render() {
         const { innerHtml, stylesheets, language, node } = this.props;
-        return React.createElement('html', {
+        return createElement('html', {
             xmlns: 'http://www.w3.org/1999/xhtml',
             'xmlns:epub': 'http://www.idpf.org/2007/ops',
             lang: language,

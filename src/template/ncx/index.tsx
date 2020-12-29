@@ -1,11 +1,13 @@
 import { RenderingContext } from "../../codegen";
 import { Book, Content, Group, NodeVisitor } from "../../structure";
 import { NavPoint } from "./nav-point";
-import React from "react";
+import { createElement, FunctionComponent } from "preact";
+import { JSXInternal } from "preact/src/jsx";
+import Element = JSXInternal.Element;
 
 
-export const NCX: React.FunctionComponent<RenderingContext<Book>> = ({ node: book }) => {
-    return React.createElement('ncx', {
+export const NCX: FunctionComponent<RenderingContext<Book>> = ({ node: book }) => {
+    return createElement('ncx', {
         xmlns: 'http://www.daisy.org/z3986/2005/ncx/',
         version: '2005-1'
     }, [
@@ -30,8 +32,8 @@ function renderHead(book: Book) {
 function renderMetadata(book: Book) {
     return (
         <>
-            { React.createElement('docTitle', { }, React.createElement('text', { }, book.title)) }
-            { React.createElement('docAuthor', { }, React.createElement('text', { }, book.author)) }
+            { createElement('docTitle', { }, createElement('text', { }, book.title)) }
+            { createElement('docAuthor', { }, createElement('text', { }, book.author)) }
         </>
     )
 }
@@ -53,16 +55,16 @@ const BookDepthVisitor: NodeVisitor<number> = {
     }
 }
 
-class RenderNavMapVisitor implements NodeVisitor<React.ReactElement> {
+class RenderNavMapVisitor implements NodeVisitor<JSXInternal.Element> {
     private playOrder = 2
 
-    visitBook(book: Book): React.ReactElement {
-        return React.createElement('navMap', { }, [
+    visitBook(book: Book): Element {
+        return createElement('navMap', { }, [
             <NavPoint key='toc' id='toc' playOrder={1} label='TOC' link='' />,
             ...book.children().map(node => node.accept(this))
         ])
     }
-    visitContent(content: Content): React.ReactElement {
+    visitContent(content: Content): Element {
         return (
             <NavPoint
                 id={content.path}
@@ -72,7 +74,7 @@ class RenderNavMapVisitor implements NodeVisitor<React.ReactElement> {
             />
         )
     }
-    visitGroup(group: Group): React.ReactElement {
+    visitGroup(group: Group): Element {
         return (
             <NavPoint
                 id={group.path}

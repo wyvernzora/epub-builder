@@ -1,27 +1,21 @@
-import React from 'react'
 import { RenderingContext } from "../codegen";
 import { Book, NodeVisitor } from "../structure";
 import { Page } from "./page";
+import { createElement, FunctionalComponent } from "preact";
+import { JSXInternal } from "preact/src/jsx";
+import Element = JSXInternal.Element;
 
+export const TableOfContents: FunctionalComponent<RenderingContext<Book>> = (props) => (
+    <Page {...props}>{ props.node.accept(TocRenderVisitor) }</Page>
+)
 
-export class TableOfContentsComponent extends React.PureComponent<RenderingContext<Book>> {
-    render() {
-        const { node: book } = this.props
-        return (
-            <Page {...this.props}>{
-                book.accept(TocRenderVisitor)
-            }</Page>
-        )
-    }
-}
-
-const TocRenderVisitor: NodeVisitor<React.ReactElement> = {
+const TocRenderVisitor: NodeVisitor<Element> = {
     visitBook(book) {
         return (
             <>
                 <h1 className='toc-book__title' />
                 {
-                    React.createElement('nav', {
+                    createElement('nav', {
                         id: 'toc',
                         role: 'doc-toc',
                         'epub:type': 'toc',

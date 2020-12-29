@@ -1,10 +1,9 @@
-import * as React from 'react'
 import { Book, Content, Group } from "./structure";
 import { CodeGenerator, DataFile } from "./codegen";
 import { Locale } from "locale-enum";
-import { renderToStaticMarkup } from "react-dom/server";
-import { ContentComponent, GroupComponent, TableOfContentsComponent } from "./template";
+import { ContentComponent, GroupComponent, TableOfContents } from "./template";
 import { NCX } from "./template/ncx";
+import { render } from "preact-render-to-string";
 
 const book = new Book({
     id: 'n123456',
@@ -48,7 +47,7 @@ class DefaultCodeGenerator implements CodeGenerator {
     stylesheets = []
 
     visitContent(content: Content): DataFile[] {
-        const data = renderToStaticMarkup(<ContentComponent { ...this } node={content} />)
+        const data = render(<ContentComponent { ...this } node={content} />)
 
         return [{
             path: content.link(),
@@ -57,7 +56,7 @@ class DefaultCodeGenerator implements CodeGenerator {
     }
 
     visitGroup(group: Group): DataFile[] {
-        const data = renderToStaticMarkup(<GroupComponent  {...this} node={group} />)
+        const data = render(<GroupComponent  {...this} node={group} />)
 
         return [{
             path: group.link(),
@@ -66,14 +65,14 @@ class DefaultCodeGenerator implements CodeGenerator {
     }
 
     visitBook(book: Book): DataFile[] {
-        const data = renderToStaticMarkup(<TableOfContentsComponent {...this} node={book} />)
+        const data = render(<TableOfContents {...this} node={book} />)
 
         return [{
             path: 'OEBPS/text/toc.xhtml',
             data: Buffer.from(data),
         }, {
             path: 'ncx.toc',
-            data: Buffer.from(renderToStaticMarkup(<NCX {...this} node={book} />))
+            data: Buffer.from(render(<NCX {...this} node={book} />))
         }, ...book.children().flatMap(node => node.accept(this))]
     }
 }

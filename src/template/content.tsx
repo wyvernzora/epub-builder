@@ -1,14 +1,8 @@
 import { Content } from "../structure";
 import { Page } from "./page";
-import React from "react";
 import { RenderingContext } from "../codegen";
+import { FunctionComponent } from "preact";
 
 
-export class ContentComponent extends React.PureComponent<RenderingContext<Content>> {
-    render(): JSX.Element {
-        const { node } = this.props;
-        return (
-            <Page {...this.props} innerHtml={node.content} />
-        )
-    }
-}
+export const ContentComponent: FunctionComponent<RenderingContext<Content>> = (props) =>
+    (<Page {...props} innerHtml={props.node.content} />)

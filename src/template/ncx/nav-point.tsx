@@ -1,4 +1,4 @@
-import React from "react";
+import { createElement, FunctionComponent } from "preact";
 
 interface NavPointProps {
     id: string
@@ -7,9 +7,9 @@ interface NavPointProps {
     link: string
 }
 
-export const NavPoint: React.FunctionComponent<NavPointProps> = (props) => {
+export const NavPoint: FunctionComponent<NavPointProps> = (props) => {
     const { id, playOrder, label, link } = props;
-    return React.createElement('navPoint', {
+    return createElement('navPoint', {
         id,
         playOrder,
         key: id,
@@ -20,8 +20,8 @@ export const NavPoint: React.FunctionComponent<NavPointProps> = (props) => {
     ])
 }
 
-export const NavLabel: React.FunctionComponent<{ text: string }> = ({ text }) =>
-    React.createElement('navLabel', <text>{text}</text>)
+export const NavLabel: FunctionComponent<{ text: string }> = ({ text }) =>
+    createElement('navLabel', { }, <text>{text}</text>)
 
-export const NavContent: React.FunctionComponent<{ src: string }> = ({ src }) =>
-    React.createElement('content', { src })
+export const NavContent: FunctionComponent<{ src: string }> = ({ src }) =>
+    createElement('content', { src })
