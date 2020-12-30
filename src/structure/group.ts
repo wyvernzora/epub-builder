@@ -1,25 +1,20 @@
-import assert from "assert"
 import { join } from 'path'
-import { ID, Kind, Node, NodeProps, NodeVisitor } from './node'
+import { Kind, Node, NodeProps, NodeVisitor } from './node'
 
 export type GroupProps = NodeProps
 
-export class Group implements Node, GroupProps {
+export class Group extends Node {
     public readonly kind: Kind = 'group'
 
-    public readonly id: ID
-    public readonly title: string
-    public path: string;
     public parent?: Node;
     private _children: Node[] = []
 
-    constructor({ id, title }: GroupProps) {
-        assert(!!(this.path = this.id = id), 'Group: ID must not be null')
-        assert(!!(this.title = title), 'Group: Title must not be null or empty')
+    constructor(props: GroupProps) {
+        super(props)
     }
 
     push(node: Node): void {
-        const newpath = join(this.path, node.id)
+        const newpath = join(this.path, node.name)
 
         // Cycle check
         let current: Node | undefined = this
@@ -44,7 +39,7 @@ export class Group implements Node, GroupProps {
     }
 
     link(): string {
-        return join('OEBPS/text', `${this.path}/index.xhtml`)
+        return join('OPS/xhtml', `${this.path}/index.xhtml`)
     }
 
 }

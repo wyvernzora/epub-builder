@@ -1,22 +1,17 @@
 import assert from 'assert'
 import { join } from 'path'
-import { ID, Kind, Node, NodeProps, NodeVisitor } from './node'
+import { Kind, Node, NodeProps, NodeVisitor } from './node'
 
 export type ContentProps = NodeProps & {
     content: string
 }
 
-export class Content implements Node, ContentProps {
+export class Content extends Node {
     public readonly kind: Kind = 'content'
-
-    public readonly id: ID
-    public readonly title: string
     public readonly content: string
-    public path: string
 
-    constructor({ id, title, content }: ContentProps) {
-        assert(!!(this.path = this.id = id), 'Content: ID must not be null')
-        assert(!!(this.title = title), 'Content: Title must not be null or empty')
+    constructor({ name, title, content }: ContentProps) {
+        super({ name, title })
         assert(!!(this.content = content), 'Content: Content must not be null or empty')
     }
 
@@ -25,7 +20,7 @@ export class Content implements Node, ContentProps {
     }
 
     link(): string {
-        return join('OEBPS/text', `${this.path}.xhtml`)
+        return join('OPS/xhtml', `${this.path}.xhtml`)
     }
 }
 

@@ -9,7 +9,7 @@ export type BookProps = NodeProps & {
     updatedAt: Date
 }
 
-export class Book extends Group implements BookProps {
+export class Book extends Group {
     public readonly kind: Kind = 'book'
     public readonly path: string = ''
 
@@ -17,8 +17,8 @@ export class Book extends Group implements BookProps {
     public readonly language: Locale
     public readonly updatedAt: Date
 
-    constructor({ id, title, author, language, updatedAt }: BookProps) {
-        super({ id: id, title: title })
+    constructor({ name, title, author, language, updatedAt }: BookProps) {
+        super({ name, title })
 
         assert(!!(this.author = author), 'Book: Author must not be null or empty')
         assert(!!(this.language = language), 'Book: Language must not be null or empty')

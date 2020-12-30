@@ -1,12 +1,12 @@
 import { Book, Content, Group } from "./structure";
-import { CodeGenerator, DataFile } from "./codegen";
+import { Bundler } from "./bundle";
 import { Locale } from "locale-enum";
-import { ContentComponent, GroupComponent, TableOfContents } from "./template";
-import { NCX } from "./template/ncx";
-import { render } from "preact-render-to-string";
+import 'preact/debug'
+import JSZip from 'jszip';
+import { promises } from "fs"
 
 const book = new Book({
-    id: 'n123456',
+    name: 'n123456',
     title: 'Test Book',
     author: 'Test Author',
     language: Locale.ja_JP,
@@ -14,75 +14,52 @@ const book = new Book({
 })
 
 const chapter = new Group({
-    id: 'c01',
+    name: 'c01',
     title: 'Chapter One',
 })
 book.push(chapter)
 
 chapter.push(new Content({
-    id: 'e01',
+    name: 'e01',
     title: 'Episode One',
     content: 'Lorem Ipsum Dolor Sit Amet',
 }))
 chapter.push(new Content({
-    id: 'e02',
+    name: 'e02',
     title: 'Episode Two',
     content: 'Lorem Ipsum Dolor Sit Amet',
 }))
 
 const subchapter = new Group({
-    id: 's01',
+    name: 's01',
     title: 'Subchapter One'
 })
 chapter.push(subchapter)
 
 subchapter.push(new Content({
-    id: 'e03',
+    name: 'e03',
     title: 'Episode Three',
-    content: 'Lorem Ipsum!!'
+    content: 'Lorem Ipsum!!',
 }))
 
-class DefaultCodeGenerator implements CodeGenerator {
-    language = Locale.ja
-    stylesheets = []
+;(async function() {
+    const bundle = await book.accept(new Bundler())
 
-    visitContent(content: Content): DataFile[] {
-        const data = render(<ContentComponent { ...this } node={content} />)
+    const jszip = new JSZip()
+    jszip.file('mimetype', 'application/epub+zip', { compression: 'STORE' })
 
-        return [{
-            path: content.link(),
-            data: Buffer.from(data),
-        }]
+    for (const asset of bundle.assets) {
+        console.log(`Bundling asset [${asset.id}] @ ${asset.path}`)
+        console.log(asset.data.toString() + '\n\n')
+        jszip.file(asset.path, asset.data, { compression: 'DEFLATE' })
     }
 
-    visitGroup(group: Group): DataFile[] {
-        const data = render(<GroupComponent  {...this} node={group} />)
+    const archiveBuffer = await jszip.generateAsync({
+        type: 'nodebuffer',
+        compressionOptions: {
+            level: 9
+        }
+    })
+    await promises.writeFile('test.epub', archiveBuffer)
 
-        return [{
-            path: group.link(),
-            data: Buffer.from(data)
-        }, ...group.children().flatMap(node => node.accept(this))]
-    }
-
-    visitBook(book: Book): DataFile[] {
-        const data = render(<TableOfContents {...this} node={book} />)
-
-        return [{
-            path: 'OEBPS/text/toc.xhtml',
-            data: Buffer.from(data),
-        }, {
-            path: 'ncx.toc',
-            data: Buffer.from(render(<NCX {...this} node={book} />))
-        }, ...book.children().flatMap(node => node.accept(this))]
-    }
-}
-
-(async function() {
-    const files = book.accept(new DefaultCodeGenerator())
-    for (const file of files) {
-        console.log(`=== ===`)
-        console.log(`File: ${file.path}`);
-        console.log(file.data.toString('utf-8'))
-        console.log(`\n\n`)
-    }
 })().catch(console.error);
