@@ -1,11 +1,10 @@
 import { join } from 'path'
-import { Kind, Node, NodeProps, NodeVisitor } from './node'
+import { Node, NodeVisitor } from './node'
 
-export type GroupProps = NodeProps
+export type GroupProps = Node.Props
 
 export class Group extends Node {
-    public readonly kind: Kind = 'group'
-
+    public readonly kind: Node.Kind = 'group'
     public parent?: Node;
     private _children: Node[] = []
 
@@ -13,21 +12,24 @@ export class Group extends Node {
         super(props)
     }
 
-    push(node: Node): void {
-        const newpath = join(this.path, node.name)
-
-        // Cycle check
-        let current: Node | undefined = this
-        while (!!current) {
-            if (node === current) {
-                throw new Error(`Cycle detected: pushing node to ${newpath}, but it already exists at ${node.path}`)
-            }
-            current = current.parent
+    push(...nodes: Node[]): Group {
+        for (const node of nodes) {
+            this.cycleCheck(node)
+            node.parent = this
+            node.path = join(this.path, node.name)
+            this._children.push(node)
         }
+        return this
+    }
 
-        node.parent = this
-        node.path = newpath
-        this._children.push(node)
+    unshift(...nodes: Node[]): Group {
+        for (const node of nodes) {
+            this.cycleCheck(node)
+            node.parent = this
+            node.path = join(this.path, node.name)
+            this._children.unshift(node)
+        }
+        return this
     }
 
     children(): Node[] {
@@ -38,8 +40,15 @@ export class Group extends Node {
         return visitor.visitGroup(this)
     }
 
-    link(): string {
-        return join('OPS/xhtml', `${this.path}/index.xhtml`)
+    private cycleCheck(node: Node): void {
+        let current: Node | undefined = this
+        const newpath = join(this.path, node.name)
+        while (!!current) {
+            if (node === current) {
+                throw new Error(`Cycle detected: pushing node to ${newpath}, but it already exists at ${node.path}`)
+            }
+            current = current.parent
+        }
     }
 
 }

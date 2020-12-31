@@ -1,9 +1,8 @@
 import { Book, Content, Group } from "./structure";
-import { Bundler } from "./bundle";
 import { Locale } from "locale-enum";
 import 'preact/debug'
-import JSZip from 'jszip';
-import { promises } from "fs"
+import CodeGenerator from './codegen'
+import { Output } from './output'
 
 const book = new Book({
     name: 'n123456',
@@ -11,55 +10,19 @@ const book = new Book({
     author: 'Test Author',
     language: Locale.ja_JP,
     updatedAt: new Date(),
-})
-
-const chapter = new Group({
-    name: 'c01',
-    title: 'Chapter One',
-})
-book.push(chapter)
-
-chapter.push(new Content({
-    name: 'e01',
-    title: 'Episode One',
-    content: 'Lorem Ipsum Dolor Sit Amet',
-}))
-chapter.push(new Content({
-    name: 'e02',
-    title: 'Episode Two',
-    content: 'Lorem Ipsum Dolor Sit Amet',
-}))
-
-const subchapter = new Group({
-    name: 's01',
-    title: 'Subchapter One'
-})
-chapter.push(subchapter)
-
-subchapter.push(new Content({
-    name: 'e03',
-    title: 'Episode Three',
-    content: 'Lorem Ipsum!!',
-}))
+}).push(
+    new Group({ name: 'c01', title: 'Chapter One' }).push(
+        new Content({ name: 'e01', title: 'Episode One', content: 'Lorem Ipsum One' }),
+        new Content({ name: 'e02', title: 'Episode Two', content: 'Lorem Ipsum Two' })),
+    new Group({ name: 'c02', title: 'Chapter Two' }).push(
+        new Group({ name: 's01', title: 'Subchapter One' }).push(
+            new Content({ name: 'e03', title: 'Episode Three', content: 'Lorem Ipsum Three'}))))
 
 ;(async function() {
-    const bundle = await book.accept(new Bundler())
+    const generator = CodeGenerator.defaultGenerator(book)
+    const bundle = await book.accept(generator)
 
-    const jszip = new JSZip()
-    jszip.file('mimetype', 'application/epub+zip', { compression: 'STORE' })
-
-    for (const asset of bundle.assets) {
-        console.log(`Bundling asset [${asset.id}] @ ${asset.path}`)
-        console.log(asset.data.toString() + '\n\n')
-        jszip.file(asset.path, asset.data, { compression: 'DEFLATE' })
-    }
-
-    const archiveBuffer = await jszip.generateAsync({
-        type: 'nodebuffer',
-        compressionOptions: {
-            level: 9
-        }
-    })
-    await promises.writeFile('test.epub', archiveBuffer)
+    await Output.terminal('**/container.xml').writeBundle(bundle)
+    await Output.archive('test.epub').writeBundle(bundle)
 
 })().catch(console.error);

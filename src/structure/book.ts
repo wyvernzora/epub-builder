@@ -1,16 +1,16 @@
 import assert from "assert"
 import { Locale } from 'locale-enum'
-import { Kind, Node, NodeProps, NodeVisitor } from './node'
+import { Node, NodeVisitor } from './node'
 import { Group } from './group'
 
-export type BookProps = NodeProps & {
+export type BookProps = Node.Props & {
     author: string
     language: Locale
     updatedAt: Date
 }
 
 export class Book extends Group {
-    public readonly kind: Kind = 'book'
+    public readonly kind: Node.Kind = 'book'
     public readonly path: string = ''
 
     public readonly author: string
@@ -23,6 +23,16 @@ export class Book extends Group {
         assert(!!(this.author = author), 'Book: Author must not be null or empty')
         assert(!!(this.language = language), 'Book: Language must not be null or empty')
         assert(!!(this.updatedAt = updatedAt), 'Book: UpdatedAt must not be null or empty')
+    }
+
+    push(...nodes: Node[]): Book {
+        super.push(...nodes)
+        return this
+    }
+
+    unshift(...nodes: Node[]): Book {
+        super.unshift(...nodes)
+        return this
     }
 
     accept<T>(visitor: NodeVisitor<T>): T {

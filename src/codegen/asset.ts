@@ -7,6 +7,7 @@ export interface Asset {
     type: string
     path: string
     data: Buffer | string
+    properties?: 'nav'
 }
 
 export namespace Asset {

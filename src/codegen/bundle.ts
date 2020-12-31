@@ -3,8 +3,12 @@ import { Assets } from "./asset";
 export class Bundle {
     readonly assets: Assets = []
 
-    addAssets(...assets: Assets): void {
+    pushAssets(...assets: Assets): void {
         this.assets.push(...assets)
+    }
+
+    unshiftAssets(...assets: Assets): void {
+        this.assets.unshift(...assets)
     }
 
     text(): Assets {
