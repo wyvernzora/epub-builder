@@ -3,7 +3,7 @@ import { Plugin } from '../plugin'
 import { Context, Paths } from '../../codegen'
 
 
-export class GenerateOpfPlugin extends Plugin {
+export class OpfPlugin extends Plugin {
 
     global = async ({ book, bundle, guide }: Context) => {
         const dom =
@@ -25,7 +25,6 @@ export class GenerateOpfPlugin extends Plugin {
             />
 
         bundle.pushAssets({
-            id: 'opf',
             category: 'metadata',
             type: 'application/xml',
             path: Paths.OPFPath,

@@ -3,7 +3,7 @@ import { Plugin } from '../plugin'
 import { Context, Paths } from '../../codegen'
 
 
-export class GenerateContainerXmlPlugin extends Plugin {
+export class ContainerXmlPlugin extends Plugin {
 
     global = async (context: Context) => {
         const dom =
@@ -12,7 +12,6 @@ export class GenerateContainerXmlPlugin extends Plugin {
                 mediaType: 'application/oebps-package+xml' }]}
             />
         context.bundle.unshiftAssets({
-            id: 'container_xml',
             category: 'metadata',
             type: 'application/xml',
             path: Paths.ContainerXmlPath,

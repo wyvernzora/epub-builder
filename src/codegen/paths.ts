@@ -12,8 +12,8 @@ export namespace Paths {
 
     export const NodePathVisitor: NodeVisitor<string> = {
         visitBook: () => '',
-        visitGroup: group => join(ContentBasePath, 'xhtml', `${group.name}/index.xhtml`),
-        visitContent: content => join(ContentBasePath, 'xhtml', `${content.name}.xhtml`),
+        visitGroup: group => join(ContentBasePath, 'xhtml', `${group.path}/index.xhtml`),
+        visitContent: content => join(ContentBasePath, 'xhtml', `${content.path}.xhtml`),
     }
 
     export const relativeLink = (basefile: string, href: string) => relative(dirname(basefile), href)

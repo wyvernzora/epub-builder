@@ -5,7 +5,7 @@ import { Book, Content, NodeVisitor } from '../../structure'
 import { VNode } from 'preact'
 
 
-export class GenerateTocPlugin extends Plugin {
+export class TocPlugin extends Plugin {
 
     book = async (book: Book, assets: Assets, context: Context) => {
         const dom =

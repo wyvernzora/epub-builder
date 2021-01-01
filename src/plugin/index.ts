@@ -1,24 +1,30 @@
 import { RenderContentPlugin } from './impl/render-content-plugin'
 import { RenderGroupPlugin } from './impl/render-group-plugin'
-import { GenerateTocPlugin } from './impl/generate-toc-plugin'
-import { GenerateCoverPlugin } from './impl/generate-cover-plugin'
-import { GenerateNcxPlugin } from './impl/generate-ncx-plugin'
-import { GenerateOpfPlugin } from './impl/generate-opf-plugin'
-import { GenerateContainerXmlPlugin } from './impl/generate-container-xml-plugin'
+import { TocPlugin } from './impl/toc-plugin'
+import { CoverPlugin } from './impl/cover-plugin'
+import { NcxPlugin } from './impl/ncx-plugin'
+import { OpfPlugin } from './impl/opf-plugin'
+import { ContainerXmlPlugin } from './impl/container-xml-plugin'
 import { XhtmlCleanupPlugin } from './impl/xhtml-cleanup-plugin'
+import { StylesPlugin } from './impl/styles-plugin'
+import { PluginSet } from './plugin'
 
 export * from './plugin'
-export namespace Plugin {
-    export const Defaults = [
-        new RenderContentPlugin(),
-        new RenderGroupPlugin(),
-        new GenerateTocPlugin(),
-        new GenerateCoverPlugin(),
-        new GenerateNcxPlugin(),
-        new GenerateOpfPlugin(),
-        new GenerateContainerXmlPlugin(),
-        new XhtmlCleanupPlugin(),
-    ]
-}
 
-export default Plugin
+const _corePlugins = [
+    new TocPlugin(),
+    new RenderContentPlugin(),
+    new RenderGroupPlugin(),
+    new NcxPlugin(),
+    new OpfPlugin(),
+    new ContainerXmlPlugin(),
+]
+export const CorePlugins = new PluginSet(_corePlugins)
+
+const _defaultPlugins = [
+    new StylesPlugin(),
+    new CoverPlugin(),
+    ..._corePlugins,
+    new XhtmlCleanupPlugin(),
+]
+export const DefaultPlugins = new PluginSet(_defaultPlugins)

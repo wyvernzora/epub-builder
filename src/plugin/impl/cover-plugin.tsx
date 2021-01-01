@@ -4,7 +4,7 @@ import { Plugin } from '../plugin'
 import { Assets, Context, Paths } from '../../codegen'
 
 
-export class GenerateCoverPlugin extends Plugin {
+export class CoverPlugin extends Plugin {
 
     book = async (book: Book, assets: Assets, context: Context) => {
         const dom = (

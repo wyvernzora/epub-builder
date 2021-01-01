@@ -5,7 +5,7 @@ import { Plugin } from '../plugin'
 import { Context, Paths } from '../../codegen'
 
 
-export class GenerateNcxPlugin extends Plugin {
+export class NcxPlugin extends Plugin {
 
     global = async ({ book, bundle }: Context) => {
         const metadata = {
@@ -23,7 +23,6 @@ export class GenerateNcxPlugin extends Plugin {
                 metadata={metadata}
             >{book.accept(new RenderNavMapVisitor())}</NCX>
         bundle.pushAssets({
-            id: 'ncx',
             category: 'metadata',
             type: 'application/x-dtbncx+xml',
             path: Paths.NCXPath,
