@@ -9,6 +9,7 @@ export namespace Paths {
     export const NCXPath = join(ContentBasePath, 'toc.ncx')
     export const CoverPath = join(ContentBasePath, 'xhtml', 'cover.xhtml')
     export const TOCPath = join (ContentBasePath, 'xhtml', 'toc.xhtml')
+    export const ImagePath = join(ContentBasePath, 'images')
 
     export const NodePathVisitor: NodeVisitor<string> = {
         visitBook: () => '',
@@ -16,6 +17,7 @@ export namespace Paths {
         visitContent: content => join(ContentBasePath, 'xhtml', `${content.path}.xhtml`),
     }
 
+    export const image = (uid: string, extname: string) => join(ImagePath, `${uid}${extname}`)
     export const relativeLink = (basefile: string, href: string) => relative(dirname(basefile), href)
 
 }
