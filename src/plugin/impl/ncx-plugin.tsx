@@ -50,7 +50,7 @@ class RenderNavMapVisitor implements NodeVisitor<VNode> {
 
     visitGroup = (group: Group) =>
         <NavPoint
-            id={group.uid}
+            id={group.uid.value}
             playOrder={this.playOrder++}
             label={group.title}
             link={Paths.relativeLink(Paths.NCXPath, group.accept(Paths.NodePathVisitor))}
@@ -58,7 +58,7 @@ class RenderNavMapVisitor implements NodeVisitor<VNode> {
 
     visitContent = (content: Content) =>
         <NavPoint
-            id={content.uid}
+            id={content.uid.value}
             playOrder={this.playOrder++}
             label={content.title}
             link={Paths.relativeLink(Paths.NCXPath, content.accept(Paths.NodePathVisitor))}

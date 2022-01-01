@@ -19,7 +19,7 @@ export class RenderGroupPlugin extends Plugin {
             ><h2 className="group-title">{group.title}</h2></Xhtml>
         )
         assets.push({
-            id: group.uid,
+            id: group.uid.value,
             category: 'text',
             type: 'application/xhtml+xml',
             path: path,

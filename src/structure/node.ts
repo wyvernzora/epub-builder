@@ -1,12 +1,8 @@
 import { Book } from "./book"
 import { Group } from "./group"
 import { Content } from "./content"
-import { createHash } from 'crypto'
-import base from 'base-x'
 import assert from "assert";
-
-const Base58 = base('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz')
-export type ID = string;
+import { UID } from '../uid'
 
 export abstract class Node {
     abstract readonly kind: Node.Kind
@@ -16,17 +12,17 @@ export abstract class Node {
     parent?: Node
 
     private _path: string
-    private _uid: string
+    private _uid: UID
 
     protected constructor({ name, title }: Node.Props) {
         assert(!!(this._path = this.name = name), 'Node: name must not be null')
         assert(!!(this.title = title), 'Node: title must not be null or empty')
-        this._uid = generateUidFromPath(this._path)
+        this._uid = UID.fromPath(this._path)
     }
 
     abstract accept<T>(visitor: NodeVisitor<T>): T
 
-    public get uid(): ID {
+    public get uid(): UID {
         return this._uid
     }
 
@@ -36,7 +32,7 @@ export abstract class Node {
 
     public set path(value: string) {
         this._path = value
-        this._uid = generateUidFromPath(this._path)
+        this._uid = UID.fromPath(this._path)
     }
 
 }
@@ -54,13 +50,4 @@ export interface NodeVisitor<T> {
     visitBook(i: Book): T
     visitGroup(i: Group): T
     visitContent(i: Content): T
-}
-
-function generateUidFromPath(path: string): ID {
-    const buffer = createHash('sha256')
-        .update(path)
-        .digest()
-    const hash = Base58.encode(buffer)
-        .substr(0, 16)
-    return `i${hash}`;
 }

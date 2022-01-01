@@ -19,7 +19,7 @@ export class RenderContentPlugin extends Plugin {
             >{content.content}</Xhtml>
         )
         const asset: Asset = {
-            id: content.uid,
+            id: content.uid.value,
             category: 'text',
             type: 'application/xhtml+xml',
             path: path,
