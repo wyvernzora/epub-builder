@@ -1,10 +1,10 @@
 import JSZip from 'jszip'
 import { promises } from 'fs'
-import { Output } from '../output'
+import { Bundler } from '../bundler'
 import { Bundle } from '../../codegen'
 import { dirname } from 'path'
 
-export class ArchiveOutput implements Output {
+export class ArchiveBundler implements Bundler {
 
     constructor(private readonly path: string) {
     }

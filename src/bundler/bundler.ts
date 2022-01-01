@@ -1,5 +1,5 @@
 import { Bundle } from '../codegen'
 
-export interface Output {
+export interface Bundler {
     writeBundle(bundle: Bundle): Promise<void>
 }

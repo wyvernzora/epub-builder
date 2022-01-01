@@ -1,10 +1,10 @@
 import { Asset, Bundle } from '../../codegen'
-import { Output } from '../output'
+import { Bundler } from '../bundler'
 import { promises } from 'fs'
 import { resolve, dirname } from 'path'
 
 
-export class DirectoryOutput implements Output {
+export class DirectoryBundler implements Bundler {
 
     constructor(private readonly root: string) {
     }

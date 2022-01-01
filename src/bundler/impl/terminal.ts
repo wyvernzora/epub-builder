@@ -1,4 +1,4 @@
-import { Output } from '../output'
+import { Bundler } from '../bundler'
 import { Bundle } from '../../codegen'
 import chalk from 'chalk'
 import minimatch from 'minimatch'
@@ -7,7 +7,7 @@ interface Options {
     printContent?: boolean
 }
 
-export class TerminalOutput implements Output {
+export class TerminalBundler implements Bundler {
 
     constructor(
         private readonly pattern: string = '**',
