@@ -5,7 +5,6 @@ export type GroupProps = Node.Props
 
 export class Group extends Node {
     public readonly kind: Node.Kind = 'group'
-    public parent?: Node;
     private _children: Node[] = []
 
     constructor(props: GroupProps) {

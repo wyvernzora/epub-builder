@@ -11,7 +11,6 @@ export type BookProps = Node.Props & {
 
 export class Book extends Group {
     public readonly kind: Node.Kind = 'book'
-    public readonly path: string = ''
 
     public readonly author: string
     public readonly language: Locale
@@ -20,6 +19,7 @@ export class Book extends Group {
     constructor({ name, title, author, language, updatedAt }: BookProps) {
         super({ name, title })
 
+        this.path = '';
         assert(!!(this.author = author), 'Book: Author must not be null or empty')
         assert(!!(this.language = language), 'Book: Language must not be null or empty')
         assert(!!(this.updatedAt = updatedAt), 'Book: UpdatedAt must not be null or empty')
